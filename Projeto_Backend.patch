@@ -1,0 +1,1426 @@
+Index: complete/src/main/java/com/dandara/Application.java
+===================================================================
+--- complete/src/main/java/com/dandara/Application.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/Application.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,20 @@
++package com.dandara;
++
++import org.springframework.boot.SpringApplication;
++import org.springframework.boot.autoconfigure.SpringBootApplication;
++
++import javax.annotation.PostConstruct;
++import java.util.TimeZone;
++
++@SpringBootApplication
++public class Application {
++
++	public static void main(String[] args) {
++		SpringApplication.run(Application.class, args);
++	}
++
++	@PostConstruct
++	public void init(){
++		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
++	}
++}
+Index: complete/src/main/java/com/dandara/abrigos/Abrigo.java
+===================================================================
+--- complete/src/main/java/com/dandara/abrigos/Abrigo.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/abrigos/Abrigo.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,57 @@
++package com.dandara.abrigos;
++
++import javax.persistence.Entity;
++import javax.persistence.GeneratedValue;
++import javax.persistence.GenerationType;
++import javax.persistence.Id;
++
++@Entity
++public class Abrigo {
++	@Id
++	@GeneratedValue(strategy=GenerationType.AUTO)
++	private Integer id;
++	private String nome;
++	private String logradouro;
++	private String cep;
++	private String telefone;
++
++	public Integer getId() {
++		return id;
++	}
++
++	public void setId(Integer id) {
++		this.id = id;
++	}
++
++	public String getNome() {
++		return nome;
++	}
++
++	public void setNome(String nome) {
++		this.nome = nome;
++	}
++
++	public String getLogradouro() {
++		return logradouro;
++	}
++
++	public void setLogradouro(String logradouro) {
++		this.logradouro = logradouro;
++	}
++
++	public String getCep() {
++		return cep;
++	}
++
++	public void setCep(String cep) {
++		this.cep = cep;
++	}
++
++	public String getTelefone() {
++		return telefone;
++	}
++
++	public void setTelefone(String telefone) {
++		this.telefone = telefone;
++	}
++}
+Index: complete/src/main/java/com/dandara/abrigos/AbrigoController.java
+===================================================================
+--- complete/src/main/java/com/dandara/abrigos/AbrigoController.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/abrigos/AbrigoController.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,22 @@
++package com.dandara.abrigos;
++
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.stereotype.Controller;
++import org.springframework.web.bind.annotation.*;
++
++@Controller
++@RequestMapping(path="/abrigo")
++public class AbrigoController {
++	@Autowired
++	private AbrigoRepository abrigoRepository;
++
++	@PostMapping(path="/adicionar")
++	public @ResponseBody void adicionar(@RequestBody Abrigo abrigo) {
++		abrigoRepository.save(abrigo);
++	}
++
++	@GetMapping(path="/listar")
++	public @ResponseBody Iterable<Abrigo> listarTodos() {
++		return abrigoRepository.findAll();
++	}
++}
+Index: complete/src/main/java/com/dandara/abrigos/AbrigoRepository.java
+===================================================================
+--- complete/src/main/java/com/dandara/abrigos/AbrigoRepository.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/abrigos/AbrigoRepository.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,7 @@
++package com.dandara.abrigos;
++
++import org.springframework.data.repository.CrudRepository;
++
++public interface AbrigoRepository extends CrudRepository<Abrigo, Integer> {
++
++}
+Index: complete/src/main/java/com/dandara/advogados/Advogado.java
+===================================================================
+--- complete/src/main/java/com/dandara/advogados/Advogado.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/advogados/Advogado.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,57 @@
++package com.dandara.advogados;
++
++import javax.persistence.Entity;
++import javax.persistence.GeneratedValue;
++import javax.persistence.GenerationType;
++import javax.persistence.Id;
++
++@Entity
++public class Advogado {
++	@Id
++	@GeneratedValue(strategy=GenerationType.AUTO)
++	private Integer id;
++	private String nome;
++	private String logradouro;
++	private String cep;
++	private String telefone;
++
++	public Integer getId() {
++		return id;
++	}
++
++	public void setId(Integer id) {
++		this.id = id;
++	}
++
++	public String getNome() {
++		return nome;
++	}
++
++	public void setNome(String nome) {
++		this.nome = nome;
++	}
++
++	public String getLogradouro() {
++		return logradouro;
++	}
++
++	public void setLogradouro(String logradouro) {
++		this.logradouro = logradouro;
++	}
++
++	public String getCep() {
++		return cep;
++	}
++
++	public void setCep(String cep) {
++		this.cep = cep;
++	}
++
++	public String getTelefone() {
++		return telefone;
++	}
++
++	public void setTelefone(String telefone) {
++		this.telefone = telefone;
++	}
++}
+Index: complete/src/main/java/com/dandara/advogados/AdvogadoController.java
+===================================================================
+--- complete/src/main/java/com/dandara/advogados/AdvogadoController.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/advogados/AdvogadoController.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,22 @@
++package com.dandara.advogados;
++
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.stereotype.Controller;
++import org.springframework.web.bind.annotation.*;
++
++@Controller
++@RequestMapping(path="/advogado")
++public class AdvogadoController {
++	@Autowired
++	private AdvogadoRepository advogadoRepository;
++
++	@PostMapping(path="/adicionar")
++	public @ResponseBody void adicionar(@RequestBody Advogado advogado) {
++		advogadoRepository.save(advogado);
++	}
++
++	@GetMapping(path="/listar")
++	public @ResponseBody Iterable<Advogado> listarTodos() {
++		return advogadoRepository.findAll();
++	}
++}
+Index: complete/src/main/java/com/dandara/advogados/AdvogadoRepository.java
+===================================================================
+--- complete/src/main/java/com/dandara/advogados/AdvogadoRepository.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/advogados/AdvogadoRepository.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,7 @@
++package com.dandara.advogados;
++
++import org.springframework.data.repository.CrudRepository;
++
++public interface AdvogadoRepository extends CrudRepository<Advogado, Integer> {
++
++}
+Index: complete/src/main/java/com/example/accessingdatamysql/User.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- complete/src/main/java/com/example/accessingdatamysql/User.java	(revision 6f41abee5d5315fa68993289d25a4ab5983e11ff)
++++ complete/src/main/java/com/dandara/anjoGuarda/AnjoGuarda.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -1,18 +1,17 @@
+-package com.example.accessingdatamysql;
++package com.dandara.anjoGuarda;
+ 
+ import javax.persistence.Entity;
+ import javax.persistence.GeneratedValue;
+ import javax.persistence.GenerationType;
+ import javax.persistence.Id;
+ 
+-@Entity // This tells Hibernate to make a table out of this class
+-public class User {
++@Entity
++public class AnjoGuarda {
+ 	@Id
+ 	@GeneratedValue(strategy=GenerationType.AUTO)
+ 	private Integer id;
+-
+-	private String name;
+-
++	private String nome;
++	private String celular;
+ 	private String email;
+ 
+ 	public Integer getId() {
+@@ -23,12 +22,20 @@
+ 		this.id = id;
+ 	}
+ 
+-	public String getName() {
+-		return name;
++	public String getNome() {
++		return nome;
++	}
++
++	public void setNome(String nome) {
++		this.nome = nome;
++	}
++
++	public String getCelular() {
++		return celular;
+ 	}
+ 
+-	public void setName(String name) {
+-		this.name = name;
++	public void setCelular(String celular) {
++		this.celular = celular;
+ 	}
+ 
+ 	public String getEmail() {
+Index: complete/src/main/java/com/dandara/anjoGuarda/AnjoGuardaController.java
+===================================================================
+--- complete/src/main/java/com/dandara/anjoGuarda/AnjoGuardaController.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/anjoGuarda/AnjoGuardaController.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,22 @@
++package com.dandara.anjoGuarda;
++
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.stereotype.Controller;
++import org.springframework.web.bind.annotation.*;
++
++@Controller
++@RequestMapping(path="/anjoGuarda")
++public class AnjoGuardaController {
++	@Autowired
++	private AnjoGuardaRepository anjoGuardaRepository;
++
++	@PostMapping(path="/adicionar")
++	public @ResponseBody void adicionar(@RequestBody AnjoGuarda anjoGuarda) {
++		anjoGuardaRepository.save(anjoGuarda);
++	}
++
++	@GetMapping(path="/listar")
++	public @ResponseBody Iterable<AnjoGuarda> listarTodos() {
++		return anjoGuardaRepository.findAll();
++	}
++}
+Index: complete/src/main/java/com/dandara/anjoGuarda/AnjoGuardaRepository.java
+===================================================================
+--- complete/src/main/java/com/dandara/anjoGuarda/AnjoGuardaRepository.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/anjoGuarda/AnjoGuardaRepository.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,7 @@
++package com.dandara.anjoGuarda;
++
++import org.springframework.data.repository.CrudRepository;
++
++public interface AnjoGuardaRepository extends CrudRepository<AnjoGuarda, Integer> {
++
++}
+Index: complete/src/main/java/com/dandara/cadastro/Cadastro.java
+===================================================================
+--- complete/src/main/java/com/dandara/cadastro/Cadastro.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/cadastro/Cadastro.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,36 @@
++package com.dandara.cadastro;
++
++import com.dandara.anjoGuarda.AnjoGuarda;
++import com.dandara.login.Login;
++
++import java.util.List;
++
++public class Cadastro {
++    private DadosPessoais dadosPessoais;
++    private Login login;
++    private List<AnjoGuarda> anjoGuarda;
++
++    public DadosPessoais getDadosPessoais() {
++        return dadosPessoais;
++    }
++
++    public void setDadosPessoais(DadosPessoais dadosPessoais) {
++        this.dadosPessoais = dadosPessoais;
++    }
++
++    public Login getLogin() {
++        return login;
++    }
++
++    public void setLogin(Login login) {
++        this.login = login;
++    }
++
++    public List<AnjoGuarda> getAnjoGuarda() {
++        return anjoGuarda;
++    }
++
++    public void setAnjoGuarda(List<AnjoGuarda> anjoGuarda) {
++        this.anjoGuarda = anjoGuarda;
++    }
++}
+Index: complete/src/main/java/com/dandara/cadastro/CadastroController.java
+===================================================================
+--- complete/src/main/java/com/dandara/cadastro/CadastroController.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/cadastro/CadastroController.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,36 @@
++package com.dandara.cadastro;
++
++import com.dandara.anjoGuarda.AnjoGuardaController;
++import com.dandara.login.LoginController;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.stereotype.Controller;
++import org.springframework.web.bind.annotation.*;
++
++@Controller
++@RequestMapping(path="/cadastro")
++public class CadastroController {
++	@Autowired
++	private CadastroRepository cadastroRepository;
++	private AnjoGuardaController anjoGuardaController;
++	private LoginController loginController;
++
++	@PostMapping(path="/adicionar")
++	public @ResponseBody void adicionar(@RequestBody Cadastro cadastro) {
++		adicionarDadosPessoais(cadastro.getDadosPessoais());
++
++		cadastro.getAnjoGuarda().forEach(anjoGuarda -> {
++			anjoGuardaController.adicionar(anjoGuarda);
++		});
++
++		loginController.criarLogin(cadastro.getLogin());
++
++	}
++
++	private void adicionarDadosPessoais(DadosPessoais dadosPessoais) {
++	}
++
++	@GetMapping(path="/listar")
++	public @ResponseBody Iterable<Cadastro> listarTodos() {
++		return cadastroRepository.findAll();
++	}
++}
+Index: complete/src/main/java/com/dandara/cadastro/CadastroRepository.java
+===================================================================
+--- complete/src/main/java/com/dandara/cadastro/CadastroRepository.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/cadastro/CadastroRepository.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,7 @@
++package com.dandara.cadastro;
++
++import org.springframework.data.repository.CrudRepository;
++
++public interface CadastroRepository extends CrudRepository<Cadastro, Integer> {
++
++}
+Index: complete/src/main/java/com/dandara/cadastro/DadosPessoais.java
+===================================================================
+--- complete/src/main/java/com/dandara/cadastro/DadosPessoais.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/cadastro/DadosPessoais.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,4 @@
++package com.dandara.cadastro;
++
++public class DadosPessoais {
++}
+Index: complete/src/main/java/com/dandara/database/FunctionNames.java
+===================================================================
+--- complete/src/main/java/com/dandara/database/FunctionNames.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/database/FunctionNames.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,6 @@
++package com.dandara.database;
++
++public class FunctionNames {
++    public static final String FNC_BUSCAR_ID_POR_USUARIO = "select * from fnc_buscar_id_por_usuario(?)";
++    public static final String FNC_BUSCAR_EMERGENCIA = "select * from fnc_buscar_emergencia()";
++}
+Index: complete/src/main/java/com/dandara/database/ProcedureCaller.java
+===================================================================
+--- complete/src/main/java/com/dandara/database/ProcedureCaller.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/database/ProcedureCaller.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,35 @@
++package com.dandara.database;
++
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.jdbc.core.BeanPropertyRowMapper;
++import org.springframework.jdbc.core.JdbcTemplate;
++
++import java.util.ArrayList;
++import java.util.List;
++
++public class ProcedureCaller {
++    final JdbcTemplate jdbcTemplate;
++
++    @Autowired
++    public ProcedureCaller(JdbcTemplate jdbcTemplate) {
++        this.jdbcTemplate = jdbcTemplate;
++    }
++
++    public <T> T callQuery(Class<T> classe, String queryName, Object[] params){
++        List<T> list = callQueryList(classe,queryName, params);
++
++        if(list == null || list.size() == 0) {
++            return null;
++        }
++
++        return list.get(0);
++    }
++
++    public <T> List<T> callQueryList(Class<T> classe, String queryName, Object[] params){
++        List<T> list = new ArrayList<>();
++        jdbcTemplate.query(queryName,
++                params,
++                (rs, rowNum) -> list.add((new BeanPropertyRowMapper<>(classe)).mapRow(rs, rowNum)));
++        return list;
++    }
++}
+Index: complete/src/main/java/com/dandara/database/ProcedureNames.java
+===================================================================
+--- complete/src/main/java/com/dandara/database/ProcedureNames.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/database/ProcedureNames.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,5 @@
++package com.dandara.database;
++
++public class ProcedureNames {
++    public static String USP_GRAVAR_EXEMPLO = "call usp_gravar_exemplo()";
++}
+Index: complete/src/main/java/com/dandara/database/query/fnc_buscar_emergencia
+===================================================================
+--- complete/src/main/java/com/dandara/database/query/fnc_buscar_emergencia	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/database/query/fnc_buscar_emergencia	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,10 @@
++create or replace function fnc_buscar_emergencia(varchar)
++    returns setof emergencia
++    language sql
++as
++$$
++select *
++from emergencia
++where "data" = select max("data") from emergencia;
++$$;
++)
+\ No newline at end of file
+Index: complete/src/main/java/com/dandara/database/query/fnc_buscar_id_por_usuario
+===================================================================
+--- complete/src/main/java/com/dandara/database/query/fnc_buscar_id_por_usuario	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/database/query/fnc_buscar_id_por_usuario	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,15 @@
++create or replace function fnc_buscar_id_por_usuario(varchar)
++    returns setof login
++    language sql
++as
++$$
++select *
++from login
++where email = $1
++$$;
++
++select max(data_criacao)
++    from valor_hora ultimo_valor_hora
++    where ultimo_valor_hora.folha = valor_hora.folha
++            and ultimo_valor_hora.contratado = valor_hora.contratado
++)
+\ No newline at end of file
+Index: complete/src/main/java/com/dandara/delegacias/Delegacia.java
+===================================================================
+--- complete/src/main/java/com/dandara/delegacias/Delegacia.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/delegacias/Delegacia.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,57 @@
++package com.dandara.delegacias;
++
++import javax.persistence.Entity;
++import javax.persistence.GeneratedValue;
++import javax.persistence.GenerationType;
++import javax.persistence.Id;
++
++@Entity
++public class Delegacia {
++	@Id
++	@GeneratedValue(strategy=GenerationType.AUTO)
++	private Integer id;
++	private String nome;
++	private String logradouro;
++	private String cep;
++	private String telefone;
++
++	public Integer getId() {
++		return id;
++	}
++
++	public void setId(Integer id) {
++		this.id = id;
++	}
++
++	public String getNome() {
++		return nome;
++	}
++
++	public void setNome(String nome) {
++		this.nome = nome;
++	}
++
++	public String getLogradouro() {
++		return logradouro;
++	}
++
++	public void setLogradouro(String logradouro) {
++		this.logradouro = logradouro;
++	}
++
++	public String getCep() {
++		return cep;
++	}
++
++	public void setCep(String cep) {
++		this.cep = cep;
++	}
++
++	public String getTelefone() {
++		return telefone;
++	}
++
++	public void setTelefone(String telefone) {
++		this.telefone = telefone;
++	}
++}
+Index: complete/src/main/java/com/dandara/delegacias/DelegaciaController.java
+===================================================================
+--- complete/src/main/java/com/dandara/delegacias/DelegaciaController.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/delegacias/DelegaciaController.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,22 @@
++package com.dandara.delegacias;
++
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.stereotype.Controller;
++import org.springframework.web.bind.annotation.*;
++
++@Controller
++@RequestMapping(path="/delegacia")
++public class DelegaciaController {
++	@Autowired
++	private DelegaciaRepository delegaciaRepository;
++
++	@PostMapping(path="/adicionar")
++	public @ResponseBody void adicionar(@RequestBody Delegacia delegacia) {
++		delegaciaRepository.save(delegacia);
++	}
++
++	@GetMapping(path="/listar")
++	public @ResponseBody Iterable<Delegacia> listarTodos() {
++		return delegaciaRepository.findAll();
++	}
++}
+Index: complete/src/main/java/com/dandara/delegacias/DelegaciaRepository.java
+===================================================================
+--- complete/src/main/java/com/dandara/delegacias/DelegaciaRepository.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/delegacias/DelegaciaRepository.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,7 @@
++package com.dandara.delegacias;
++
++import org.springframework.data.repository.CrudRepository;
++
++public interface DelegaciaRepository extends CrudRepository<Delegacia, Integer> {
++
++}
+Index: complete/src/main/java/com/dandara/emergencia/Emergencia.java
+===================================================================
+--- complete/src/main/java/com/dandara/emergencia/Emergencia.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/emergencia/Emergencia.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,57 @@
++package com.dandara.emergencia;
++
++import javax.persistence.Entity;
++import javax.persistence.GeneratedValue;
++import javax.persistence.GenerationType;
++import javax.persistence.Id;
++
++@Entity
++public class Emergencia {
++	@Id
++	@GeneratedValue(strategy=GenerationType.AUTO)
++	private Integer id;
++	private Boolean enviarLocalizacaoSms;
++	private String mensagemTextoSms;
++	private Boolean enviarLocalizacaoEmail;
++	private String mensagemTextoEmail;
++
++	public Integer getId() {
++		return id;
++	}
++
++	public void setId(Integer id) {
++		this.id = id;
++	}
++
++	public Boolean getEnviarLocalizacaoSms() {
++		return enviarLocalizacaoSms;
++	}
++
++	public void setEnviarLocalizacaoSms(Boolean enviarLocalizacaoSms) {
++		this.enviarLocalizacaoSms = enviarLocalizacaoSms;
++	}
++
++	public String getMensagemTextoSms() {
++		return mensagemTextoSms;
++	}
++
++	public void setMensagemTextoSms(String mensagemTextoSms) {
++		this.mensagemTextoSms = mensagemTextoSms;
++	}
++
++	public Boolean getEnviarLocalizacaoEmail() {
++		return enviarLocalizacaoEmail;
++	}
++
++	public void setEnviarLocalizacaoEmail(Boolean enviarLocalizacaoEmail) {
++		this.enviarLocalizacaoEmail = enviarLocalizacaoEmail;
++	}
++
++	public String getMensagemTextoEmail() {
++		return mensagemTextoEmail;
++	}
++
++	public void setMensagemTextoEmail(String mensagemTextoEmail) {
++		this.mensagemTextoEmail = mensagemTextoEmail;
++	}
++}
+Index: complete/src/main/java/com/dandara/emergencia/EmergenciaController.java
+===================================================================
+--- complete/src/main/java/com/dandara/emergencia/EmergenciaController.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/emergencia/EmergenciaController.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,32 @@
++package com.dandara.emergencia;
++
++import com.dandara.database.FunctionNames;
++import com.dandara.database.ProcedureCaller;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.dao.IncorrectResultSizeDataAccessException;
++import org.springframework.stereotype.Controller;
++import org.springframework.web.bind.annotation.*;
++
++import java.util.Optional;
++
++@Controller
++@RequestMapping(path="/emergencia")
++public class EmergenciaController {
++	@Autowired
++	private EmergenciaRepository emergenciaRepository;
++	private ProcedureCaller procedureCaller;
++
++	@PostMapping(path="/adicionarConfiguracao")
++	public @ResponseBody void adicionarConfiguracao(@RequestBody Emergencia emergencia) {
++		emergenciaRepository.save(emergencia);
++	}
++
++	@GetMapping(path="/disparar")
++	public @ResponseBody Optional<Emergencia> dispararEmergencia() {
++		try {
++			return Optional.ofNullable(procedureCaller.callQuery(Emergencia.class, FunctionNames.FNC_BUSCAR_EMERGENCIA, new Object[]{}));
++		} catch(IncorrectResultSizeDataAccessException ex) {
++			return Optional.empty();
++		}
++	}
++}
+Index: complete/src/main/java/com/dandara/emergencia/EmergenciaRepository.java
+===================================================================
+--- complete/src/main/java/com/dandara/emergencia/EmergenciaRepository.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/emergencia/EmergenciaRepository.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,8 @@
++package com.dandara.emergencia;
++
++import com.dandara.emergencia.Emergencia;
++import org.springframework.data.repository.CrudRepository;
++
++public interface EmergenciaRepository extends CrudRepository<Emergencia, Integer> {
++
++}
+Index: complete/src/main/java/com/dandara/espacoDireito/EspacoDireito.java
+===================================================================
+--- complete/src/main/java/com/dandara/espacoDireito/EspacoDireito.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/espacoDireito/EspacoDireito.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,48 @@
++package com.dandara.espacoDireito;
++
++import javax.persistence.Entity;
++import javax.persistence.GeneratedValue;
++import javax.persistence.GenerationType;
++import javax.persistence.Id;
++
++@Entity
++public class EspacoDireito {
++	@Id
++	@GeneratedValue(strategy=GenerationType.AUTO)
++	private Integer id;
++	private String nomeLei;
++	private String numeroLei;
++	private String conteudoLei;
++
++	public Integer getId() {
++		return id;
++	}
++
++	public void setId(Integer id) {
++		this.id = id;
++	}
++
++	public String getNomeLei() {
++		return nomeLei;
++	}
++
++	public void setNomeLei(String nomeLei) {
++		this.nomeLei = nomeLei;
++	}
++
++	public String getNumeroLei() {
++		return numeroLei;
++	}
++
++	public void setNumeroLei(String numeroLei) {
++		this.numeroLei = numeroLei;
++	}
++
++	public String getConteudoLei() {
++		return conteudoLei;
++	}
++
++	public void setConteudoLei(String conteudoLei) {
++		this.conteudoLei = conteudoLei;
++	}
++}
+Index: complete/src/main/java/com/dandara/espacoDireito/EspacoDireitoController.java
+===================================================================
+--- complete/src/main/java/com/dandara/espacoDireito/EspacoDireitoController.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/espacoDireito/EspacoDireitoController.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,24 @@
++package com.dandara.espacoDireito;
++
++import com.dandara.database.ProcedureCaller;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.stereotype.Controller;
++import org.springframework.web.bind.annotation.*;
++
++@Controller
++@RequestMapping(path="/espacoDireito")
++public class EspacoDireitoController {
++	@Autowired
++	private EspacoDiretoRepository espacoDiretoRepository;
++	private ProcedureCaller procedureCaller;
++
++	@PostMapping(path="/adicionar")
++	public @ResponseBody void adicionar(@RequestBody EspacoDireito espacoDireito) {
++		espacoDiretoRepository.save(espacoDireito);
++	}
++
++	@GetMapping(path="/listar")
++	public @ResponseBody Iterable<EspacoDireito> listarTodos() {
++		return espacoDiretoRepository.findAll();
++	}
++}
+Index: complete/src/main/java/com/dandara/espacoDireito/EspacoDiretoRepository.java
+===================================================================
+--- complete/src/main/java/com/dandara/espacoDireito/EspacoDiretoRepository.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/espacoDireito/EspacoDiretoRepository.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,7 @@
++package com.dandara.espacoDireito;
++
++import org.springframework.data.repository.CrudRepository;
++
++public interface EspacoDiretoRepository extends CrudRepository<EspacoDireito, Integer> {
++
++}
+Index: complete/src/main/java/com/dandara/historias/Comentario.java
+===================================================================
+--- complete/src/main/java/com/dandara/historias/Comentario.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/historias/Comentario.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,39 @@
++package com.dandara.historias;
++
++import javax.persistence.Entity;
++import javax.persistence.GeneratedValue;
++import javax.persistence.GenerationType;
++import javax.persistence.Id;
++
++@Entity
++public class Comentario {
++    @Id
++    @GeneratedValue(strategy= GenerationType.AUTO)
++    private Integer id;
++    private String autor;
++    private String comentario;
++
++    public Integer getId() {
++        return id;
++    }
++
++    public void setId(Integer id) {
++        this.id = id;
++    }
++
++    public String getAutor() {
++        return autor;
++    }
++
++    public void setAutor(String autor) {
++        this.autor = autor;
++    }
++
++    public String getComentario() {
++        return comentario;
++    }
++
++    public void setComentario(String comentario) {
++        this.comentario = comentario;
++    }
++}
+Index: complete/src/main/java/com/dandara/historias/Historia.java
+===================================================================
+--- complete/src/main/java/com/dandara/historias/Historia.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/historias/Historia.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,68 @@
++package com.dandara.historias;
++
++import javax.persistence.Entity;
++import javax.persistence.GeneratedValue;
++import javax.persistence.GenerationType;
++import javax.persistence.Id;
++import java.util.List;
++
++@Entity
++public class Historia {
++	@Id
++	@GeneratedValue(strategy=GenerationType.AUTO)
++	private Integer id;
++	private String autor;
++	private String titulo;
++	private Boolean anonimo;
++	private Boolean permitirComentario;
++	private String descricaoHistoria;
++
++	public Integer getId() {
++		return id;
++	}
++
++	public void setId(Integer id) {
++		this.id = id;
++	}
++
++	public String getAutor() {
++		return autor;
++	}
++
++	public void setAutor(String autor) {
++		this.autor = autor;
++	}
++
++	public String getTitulo() {
++		return titulo;
++	}
++
++	public void setTitulo(String titulo) {
++		this.titulo = titulo;
++	}
++
++	public Boolean getAnonimo() {
++		return anonimo;
++	}
++
++	public void setAnonimo(Boolean anonimo) {
++		this.anonimo = anonimo;
++	}
++
++	public Boolean getPermitirComentario() {
++		return permitirComentario;
++	}
++
++	public void setPermitirComentario(Boolean permitirComentario) {
++		this.permitirComentario = permitirComentario;
++	}
++
++	public String getDescricaoHistoria() {
++		return descricaoHistoria;
++	}
++
++	public void setDescricaoHistoria(String descricaoHistoria) {
++		this.descricaoHistoria = descricaoHistoria;
++	}
++
++}
+Index: complete/src/main/java/com/dandara/historias/HistoriaController.java
+===================================================================
+--- complete/src/main/java/com/dandara/historias/HistoriaController.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/historias/HistoriaController.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,22 @@
++package com.dandara.historias;
++
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.stereotype.Controller;
++import org.springframework.web.bind.annotation.*;
++
++@Controller
++@RequestMapping(path="/historia")
++public class HistoriaController {
++	@Autowired
++	private HistoriaRepository historiaRepository;
++
++	@PostMapping(path="/adicionar")
++	public @ResponseBody void adicionar(@RequestBody Historia historia) {
++		historiaRepository.save(historia);
++	}
++
++	@GetMapping(path="/listar")
++	public @ResponseBody Iterable<Historia> listarTodos() {
++		return historiaRepository.findAll();
++	}
++}
+Index: complete/src/main/java/com/dandara/historias/HistoriaRepository.java
+===================================================================
+--- complete/src/main/java/com/dandara/historias/HistoriaRepository.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/historias/HistoriaRepository.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,7 @@
++package com.dandara.historias;
++
++import org.springframework.data.repository.CrudRepository;
++
++public interface HistoriaRepository extends CrudRepository<Historia, Integer> {
++
++}
+Index: complete/src/main/java/com/dandara/login/Login.java
+===================================================================
+--- complete/src/main/java/com/dandara/login/Login.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/login/Login.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,39 @@
++package com.dandara.login;
++
++import javax.persistence.Entity;
++import javax.persistence.GeneratedValue;
++import javax.persistence.GenerationType;
++import javax.persistence.Id;
++
++@Entity
++public class Login {
++    @Id
++    @GeneratedValue(strategy= GenerationType.AUTO)
++    private Integer id;
++    private String email;
++    private String senha;
++
++    public Integer getId() {
++        return id;
++    }
++
++    public void setId(Integer id) {
++        this.id = id;
++    }
++
++    public String getEmail() {
++        return email;
++    }
++
++    public void setEmail(String email) {
++        this.email = email;
++    }
++
++    public String getSenha() {
++        return senha;
++    }
++
++    public void setSenha(String senha) {
++        this.senha = senha;
++    }
++}
+Index: complete/src/main/java/com/dandara/login/LoginController.java
+===================================================================
+--- complete/src/main/java/com/dandara/login/LoginController.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/login/LoginController.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,52 @@
++package com.dandara.login;
++
++import com.dandara.database.FunctionNames;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.jdbc.core.BeanPropertyRowMapper;
++import org.springframework.jdbc.core.JdbcTemplate;
++import org.springframework.web.bind.annotation.*;
++
++@RestController
++@RequestMapping("/login")
++public class LoginController {
++    @Autowired
++    private LoginRepository loginRepository;
++    private JdbcTemplate jdbcTemplate;
++
++    @PostMapping(path="")
++    public Boolean logar(@RequestParam String email) {
++        Integer idLogin = buscarIdPorUsuario(email);
++
++        return loginRepository.existsById(idLogin);
++    }
++
++    public Integer buscarIdPorUsuario(String email) {
++        Login login = jdbcTemplate.queryForObject(FunctionNames.FNC_BUSCAR_ID_POR_USUARIO,
++                new Object[]{email},
++                new BeanPropertyRowMapper<>(Login.class));
++
++        return login.getId();
++    }
++
++    @PostMapping(path="/recuperar")
++    public String recuperar(@RequestParam String email) {
++        enviarEmailRecuperacao(email);
++
++        return "Senha enviada com sucesso! \n " +
++                "Verifique a Caixa de Entrada\n" +
++                "do seu e-mail\n" +
++                "\n" +
++                "Caso não tenha recebido, verifique a Caixa de Spam e Lixo Eletrônico ou\n" +
++                "clique aqui para enviar novamente.\n" +
++                "\n";
++    }
++
++    public void enviarEmailRecuperacao(String email) {
++        //Envio do email
++    }
++
++    @PostMapping(path="/novo")
++    public @ResponseBody void criarLogin(@RequestBody Login login) {
++        loginRepository.save(login);
++    }
++}
+Index: complete/src/main/java/com/dandara/login/LoginRepository.java
+===================================================================
+--- complete/src/main/java/com/dandara/login/LoginRepository.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/login/LoginRepository.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,7 @@
++package com.dandara.login;
++
++import org.springframework.data.repository.CrudRepository;
++
++public interface LoginRepository extends CrudRepository<Login, Integer> {
++
++}
+Index: complete/src/main/java/com/dandara/noticias/Noticia.java
+===================================================================
+--- complete/src/main/java/com/dandara/noticias/Noticia.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/noticias/Noticia.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,52 @@
++package com.dandara.noticias;
++
++import org.springframework.format.annotation.DateTimeFormat;
++
++import javax.persistence.Entity;
++import javax.persistence.GeneratedValue;
++import javax.persistence.GenerationType;
++import javax.persistence.Id;
++import java.util.Date;
++
++@Entity
++public class Noticia {
++	@Id
++	@GeneratedValue(strategy=GenerationType.AUTO)
++	private Integer id;
++	private String titulo;
++	@DateTimeFormat(pattern = "dd/MM/yyyy")
++	private Date dataNoticia;
++	private String conteudo;
++
++	public Integer getId() {
++		return id;
++	}
++
++	public void setId(Integer id) {
++		this.id = id;
++	}
++
++	public String getTitulo() {
++		return titulo;
++	}
++
++	public void setTitulo(String titulo) {
++		this.titulo = titulo;
++	}
++
++	public Date getDataNoticia() {
++		return dataNoticia;
++	}
++
++	public void setDataNoticia(Date dataNoticia) {
++		this.dataNoticia = dataNoticia;
++	}
++
++	public String getConteudo() {
++		return conteudo;
++	}
++
++	public void setConteudo(String conteudo) {
++		this.conteudo = conteudo;
++	}
++}
+Index: complete/src/main/java/com/dandara/noticias/NoticiaController.java
+===================================================================
+--- complete/src/main/java/com/dandara/noticias/NoticiaController.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/noticias/NoticiaController.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,22 @@
++package com.dandara.noticias;
++
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.stereotype.Controller;
++import org.springframework.web.bind.annotation.*;
++
++@Controller
++@RequestMapping(path="/noticia")
++public class NoticiaController {
++	@Autowired
++	private NoticiaRepository noticiaRepository;
++
++	@PostMapping(path="/adicionar")
++	public @ResponseBody void adicionar(@RequestBody Noticia noticia) {
++		noticiaRepository.save(noticia);
++	}
++
++	@GetMapping(path="/listar")
++	public @ResponseBody Iterable<Noticia> listarTodos() {
++		return noticiaRepository.findAll();
++	}
++}
+Index: complete/src/main/java/com/dandara/noticias/NoticiaRepository.java
+===================================================================
+--- complete/src/main/java/com/dandara/noticias/NoticiaRepository.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/noticias/NoticiaRepository.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,7 @@
++package com.dandara.noticias;
++
++import org.springframework.data.repository.CrudRepository;
++
++public interface NoticiaRepository extends CrudRepository<Noticia, Integer> {
++
++}
+Index: complete/src/main/java/com/dandara/psicologos/Psicologo.java
+===================================================================
+--- complete/src/main/java/com/dandara/psicologos/Psicologo.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/psicologos/Psicologo.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,57 @@
++package com.dandara.psicologos;
++
++import javax.persistence.Entity;
++import javax.persistence.GeneratedValue;
++import javax.persistence.GenerationType;
++import javax.persistence.Id;
++
++@Entity
++public class Psicologo {
++	@Id
++	@GeneratedValue(strategy=GenerationType.AUTO)
++	private Integer id;
++	private String nome;
++	private String logradouro;
++	private String cep;
++	private String telefone;
++
++	public Integer getId() {
++		return id;
++	}
++
++	public void setId(Integer id) {
++		this.id = id;
++	}
++
++	public String getNome() {
++		return nome;
++	}
++
++	public void setNome(String nome) {
++		this.nome = nome;
++	}
++
++	public String getLogradouro() {
++		return logradouro;
++	}
++
++	public void setLogradouro(String logradouro) {
++		this.logradouro = logradouro;
++	}
++
++	public String getCep() {
++		return cep;
++	}
++
++	public void setCep(String cep) {
++		this.cep = cep;
++	}
++
++	public String getTelefone() {
++		return telefone;
++	}
++
++	public void setTelefone(String telefone) {
++		this.telefone = telefone;
++	}
++}
+Index: complete/src/main/java/com/dandara/psicologos/PsicologoController.java
+===================================================================
+--- complete/src/main/java/com/dandara/psicologos/PsicologoController.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/psicologos/PsicologoController.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,22 @@
++package com.dandara.psicologos;
++
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.stereotype.Controller;
++import org.springframework.web.bind.annotation.*;
++
++@Controller
++@RequestMapping(path="/psicologo")
++public class PsicologoController {
++	@Autowired
++	private PsicologoRepository psicologoRepository;
++
++	@PostMapping(path="/adicionar")
++	public @ResponseBody void adicionar(@RequestBody Psicologo psicologo) {
++		psicologoRepository.save(psicologo);
++	}
++
++	@GetMapping(path="/listar")
++	public @ResponseBody Iterable<Psicologo> listarTodos() {
++		return psicologoRepository.findAll();
++	}
++}
+Index: complete/src/main/java/com/dandara/psicologos/PsicologoRepository.java
+===================================================================
+--- complete/src/main/java/com/dandara/psicologos/PsicologoRepository.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/psicologos/PsicologoRepository.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,7 @@
++package com.dandara.psicologos;
++
++import org.springframework.data.repository.CrudRepository;
++
++public interface PsicologoRepository extends CrudRepository<Psicologo, Integer> {
++
++}
+Index: complete/src/main/java/com/dandara/util/Util.java
+===================================================================
+--- complete/src/main/java/com/dandara/util/Util.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
++++ complete/src/main/java/com/dandara/util/Util.java	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -0,0 +1,9 @@
++package com.dandara.util;
++
++import java.nio.charset.StandardCharsets;
++
++public class Util {
++    public String converterUtf8(String texto) {
++        return new String(texto.getBytes(), StandardCharsets.UTF_8);
++    }
++}
+Index: complete/src/main/java/com/example/accessingdatamysql/AccessingDataMysqlApplication.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- complete/src/main/java/com/example/accessingdatamysql/AccessingDataMysqlApplication.java	(revision 6f41abee5d5315fa68993289d25a4ab5983e11ff)
++++ complete/src/main/java/com/example/accessingdatamysql/AccessingDataMysqlApplication.java	(revision 6f41abee5d5315fa68993289d25a4ab5983e11ff)
+@@ -1,12 +0,0 @@
+-package com.example.accessingdatamysql;
+-
+-import org.springframework.boot.SpringApplication;
+-import org.springframework.boot.autoconfigure.SpringBootApplication;
+-
+-@SpringBootApplication
+-public class AccessingDataMysqlApplication {
+-
+-	public static void main(String[] args) {
+-		SpringApplication.run(AccessingDataMysqlApplication.class, args);
+-	}
+-}
+Index: complete/src/main/java/com/example/accessingdatamysql/MainController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- complete/src/main/java/com/example/accessingdatamysql/MainController.java	(revision 6f41abee5d5315fa68993289d25a4ab5983e11ff)
++++ complete/src/main/java/com/example/accessingdatamysql/MainController.java	(revision 6f41abee5d5315fa68993289d25a4ab5983e11ff)
+@@ -1,36 +0,0 @@
+-package com.example.accessingdatamysql;
+-
+-import org.springframework.beans.factory.annotation.Autowired;
+-import org.springframework.stereotype.Controller;
+-import org.springframework.web.bind.annotation.GetMapping;
+-import org.springframework.web.bind.annotation.PostMapping;
+-import org.springframework.web.bind.annotation.RequestMapping;
+-import org.springframework.web.bind.annotation.RequestParam;
+-import org.springframework.web.bind.annotation.ResponseBody;
+-
+-@Controller	// This means that this class is a Controller
+-@RequestMapping(path="/demo") // This means URL's start with /demo (after Application path)
+-public class MainController {
+-	@Autowired // This means to get the bean called userRepository
+-			   // Which is auto-generated by Spring, we will use it to handle the data
+-	private UserRepository userRepository;
+-
+-	@PostMapping(path="/add") // Map ONLY POST Requests
+-	public @ResponseBody String addNewUser (@RequestParam String name
+-			, @RequestParam String email) {
+-		// @ResponseBody means the returned String is the response, not a view name
+-		// @RequestParam means it is a parameter from the GET or POST request
+-
+-		User n = new User();
+-		n.setName(name);
+-		n.setEmail(email);
+-		userRepository.save(n);
+-		return "Saved";
+-	}
+-
+-	@GetMapping(path="/all")
+-	public @ResponseBody Iterable<User> getAllUsers() {
+-		// This returns a JSON or XML with the users
+-		return userRepository.findAll();
+-	}
+-}
+Index: complete/src/main/java/com/example/accessingdatamysql/UserRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- complete/src/main/java/com/example/accessingdatamysql/UserRepository.java	(revision 6f41abee5d5315fa68993289d25a4ab5983e11ff)
++++ complete/src/main/java/com/example/accessingdatamysql/UserRepository.java	(revision 6f41abee5d5315fa68993289d25a4ab5983e11ff)
+@@ -1,12 +0,0 @@
+-package com.example.accessingdatamysql;
+-
+-import org.springframework.data.repository.CrudRepository;
+-
+-import com.example.accessingdatamysql.User;
+-
+-// This will be AUTO IMPLEMENTED by Spring into a Bean called userRepository
+-// CRUD refers Create, Read, Update, Delete
+-
+-public interface UserRepository extends CrudRepository<User, Integer> {
+-
+-}
+Index: complete/src/main/resources/application.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1252
+===================================================================
+--- complete/src/main/resources/application.properties	(revision 6f41abee5d5315fa68993289d25a4ab5983e11ff)
++++ complete/src/main/resources/application.properties	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -1,4 +1,6 @@
+ spring.jpa.hibernate.ddl-auto=update
+-spring.datasource.url=jdbc:mysql://${MYSQL_HOST:localhost}:3306/db_example
+-spring.datasource.username=springuser
+-spring.datasource.password=ThePassword
++spring.datasource.url=jdbc:mysql://127.0.0.1:3306/dandara?serverTimezone=UTC&useLegacyDatetimeCode=false
++spring.datasource.username=root
++spring.datasource.password=dandan123
++
++spring.jackson.time-zone=America/Sao_Paulo
+Index: initial/src/main/resources/application.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1252
+===================================================================
+--- initial/src/main/resources/application.properties	(revision 6f41abee5d5315fa68993289d25a4ab5983e11ff)
++++ initial/src/main/resources/application.properties	(revision f568d08aeec1cab260796292fb9fff91ee62c0e7)
+@@ -1,4 +1,4 @@
+ spring.jpa.hibernate.ddl-auto=update
+-spring.datasource.url=jdbc:mysql://${MYSQL_HOST:localhost}:3306/db_example
+-spring.datasource.username=springuser
+-spring.datasource.password=ThePassword
++spring.datasource.url=jdbc:mysql://127.0.0.1:3306/dandara
++spring.datasource.username=root
++spring.datasource.password=dandan123
